@@ -1,0 +1,47 @@
+version: '3'
+services:
+  lrhost:
+    image: performancetesting/host:21.00
+    container_name: "lrhost"
+    hostname: Controller
+    ports:    
+    - 8731:8731
+    - 8086:8086
+    network_mode: nat
+    stdin_open: true
+    tty: true
+  lg:
+    image: performancetesting/microfocus_onelg_windows:21.00
+    container_name: "lgsa"
+    ports:
+    - 54245:54245
+    - 54345:54345
+    network_mode: nat
+    stdin_open: true
+    tty: true
+  lreserver:
+    image: performancetesting/lreserver:21.00
+    environment:
+    - "ASPNETCORE_ENVIRONMENT=DevCI"
+    depends_on:
+    - mssql
+    container_name: "lre"
+    ports:
+    - 80:80
+    - 5876:5876
+    hostname: lreserver
+    network_mode: nat
+    stdin_open: true
+    tty: true
+  mssql:
+    image: performancetesting/custom_mssql:2019
+    container_name: "mssql"
+    hostname: mssql
+    ports:
+    - 1433:1433
+    network_mode: nat
+    stdin_open: true
+    tty: true
+    environment:
+    - "sa_password=W3lcome1"
+    - "ACCEPT_EULA=Y"
