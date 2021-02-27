@@ -1,0 +1,48 @@
+version: '3'
+services:
+  lrhost:
+    image: performancetesting/host:20.01
+    container_name: "lrhost"
+    hostname: lrhost
+    ports:    
+    - 8731:8731
+    - 8086:8086
+    network_mode: nat
+    stdin_open: true
+    tty: true
+  lrlg:
+    image: performancetesting/load_generator_windows:20.01
+    container_name: "lrlg"
+    hostname: lrlg
+    ports:
+    - 54245:54245
+    - 54345:54345
+    network_mode: nat
+    stdin_open: true
+    tty: true
+  lreserver:
+    image: performancetesting/lreserver:20.01
+    container_name: "lreserver"
+    hostname: lreserver
+    depends_on:
+    - mssql
+    ports:
+    - 80:80
+    - 5876:5876
+    network_mode: nat
+    stdin_open: true
+    tty: true
+    environment:
+    - "ASPNETCORE_ENVIRONMENT=DevCI"
+  mssql:
+    image: performancetesting/custom_mssql:2019
+    container_name: "mssql"
+    hostname: mssql
+    ports:
+    - 1433:1433
+    network_mode: nat
+    stdin_open: true
+    tty: true
+    environment:
+    - "sa_password=W3lcome1"
+    - "ACCEPT_EULA=Y"
